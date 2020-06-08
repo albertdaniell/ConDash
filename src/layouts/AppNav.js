@@ -29,7 +29,7 @@ function AppNav(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Kilifi Dashboard
+            {/* Kilifi Dashboard */}Test
           </Typography>
         </Toolbar>
       </AppBar>

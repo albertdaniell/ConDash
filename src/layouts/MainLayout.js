@@ -5,10 +5,18 @@ import Typography from "@material-ui/core/Typography";
 import AppNav from "./AppNav";
 import { useStyles } from "../constants";
 import Sidenav from "./SideNav";
+import { Button } from "@material-ui/core";
+import SuccessMsg from "../components/SuccessMsg";
+import ErrorMsg from "../components/ErrorMsg";
 
 export default function Default() {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -16,6 +24,14 @@ export default function Default() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
   };
 
   return (
@@ -36,6 +52,17 @@ export default function Default() {
       >
         <div className={classes.drawerHeader} />
         <Typography paragraph>
+          <Button
+            onClick={handleClick({ vertical: "top", horizontal: "center" })}
+          >
+            Top-Center
+          </Button>
+          {/* <SuccessMsg state={state} handleClose={handleClose} handleClick={handleClick}/> */}
+          <ErrorMsg
+            state={state}
+            handleClose={handleClose}
+            handleClick={handleClick}
+          ></ErrorMsg>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
           dolor purus non enim praesent elementum facilisis leo vel. Risus at

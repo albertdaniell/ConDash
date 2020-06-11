@@ -55,4 +55,35 @@ export const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+
+  textInput: {
+    width: "100%",
+    backgroundColor: "#F5F5F5",
+    marginTop: 10,
+  },
+  textHead: {
+    textAlign: "left",
+    marginBottom: 40,
+  },
+  textHead2: {
+    textAlign: "left",
+    marginBottom: 20,
+    fontSize: 17,
+    marginTop: 30,
+  },
+  textInputLabel: {
+    fontSize: 14,
+    textAlign: "left",
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  submitBtn: {
+    marginTop: 20,
+  },
+  imageDiv: {
+    width: 200,
+    height: 200,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+  },
 }));

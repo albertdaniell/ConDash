@@ -13,6 +13,7 @@ import { useStyles } from "../../constants";
 import Axios from "axios";
 import SuccessMsg from "../../components/SuccessMsg";
 import appDate from "../../constants/appDate";
+import ErrorMsg from "../../components/ErrorMsg";
 
 function AddInstitution() {
   const [institutionName, setInstitutionName] = useState("");
@@ -26,67 +27,89 @@ function AddInstitution() {
   const [pEShortPrice, setPEShortPrice] = useState("");
   const [pESkirtPrice, setPESkirtPrice] = useState("");
   const [pEtShirtPrice, setPEtShirtPrice] = useState("");
-  const [showSuccess,setShowSuccess]=useState({
+  const [showSuccess, setShowSuccess] = useState({
     open: false,
     vertical: "top",
     horizontal: "center",
   });
+
+  const [showError, setShowError] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+
+  const [Message, setMsg] = useState("");
+
   const institutions = [
     { key: 1, label: "School" },
     { key: 2, label: "Company" },
   ];
 
-  const formData={
-      "name":institutionName,
-      "dateAdded":appDate.fullDate,
-      "type":institutionType,
-      "imageBlob": {
-        "uniform": "18726626ahsyyafs-12",
-        "peKit": "18726626ajshhsi1sks-23"
-       
-      },
-         "uniformPrices": {
-        "short": uniformShortPrice,
-        "skirt": uniformShirtPrice,
-        "sweater": uniformSweaterPrice,
-        "tie": uniformTiePrice
-      },
-      "peKitPrices": {
-        "short": pEShortPrice,
-        "skirt": pESkirtPrice,
-        "tShirt": pEtShirtPrice
-      }
-  }
-
-
-  const handleClose = () => {
-    setShowSuccess({ ...showSuccess, open: false });
+  const formData = {
+    name: institutionName,
+    dateAdded: appDate.fullDate,
+    type: institutionType,
+    imageBlob: {
+      uniform: "18726626ahsyyafs-12",
+      peKit: "18726626ajshhsi1sks-23",
+    },
+    uniformPrices: {
+      short: uniformShortPrice,
+      skirt: uniformShirtPrice,
+      sweater: uniformSweaterPrice,
+      tie: uniformTiePrice,
+    },
+    peKitPrices: {
+      short: pEShortPrice,
+      skirt: pESkirtPrice,
+      tShirt: pEtShirtPrice,
+    },
   };
 
-
-  const addInstitution=(newState)=>{
-
-    Axios({
-      url:'institutions',
-      data:formData,
-      method:'POST',
-      headers : {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-        }
-  
-
-    }).then((res)=>{
-      console.log(res.status)
-//setShowSuccess(true)
-setShowSuccess({ open: true, ...newState });
-
-
-    }).catch(err=>{
-      console.log("Error is "+err)
-    })
+  const clearData=()=>{
+  setTimeout(() => {
+    setInstitutionName("")
+    setInstitutionType("")
+    setPEShortPrice("")
+    setPESkirtPrice("")
+    setPEtShirtPrice("")
+    setUniformShirtPrice("")
+    setUniformShortPrice("")
+    setUniformSweaterPrice("")
+    setUniformTiePrice("")
+  }, 2000);
   }
-  
+  const handleClose = () => {
+    setShowSuccess({ ...showSuccess, open: false }) ||
+      setShowError({ ...showError, open: false });
+  };
+
+  const addInstitution = (newState) => {
+    Axios({
+      url: "institutions",
+      data: formData,
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log(res.status);
+        //setShowSuccess(true)
+        if (res.status === 200) {
+          clearData();
+          setMsg("Success Posting data.");
+          setShowSuccess({ open: true, ...newState });
+        }
+      })
+      .catch((err) => {
+        console.log("Error is " + err);
+        setMsg("Something went wrong.Kindly check your data.");
+        setShowError({ open: true, ...newState });
+      });
+  };
 
   const handleInstitutionChange = (event) => {
     setInstitutionType(event.target.value);
@@ -98,10 +121,17 @@ setShowSuccess({ open: true, ...newState });
       <CssBaseline />
 
       <Container>
-      <SuccessMsg
-            state={showSuccess}
-            handleClose={handleClose}
-          ></SuccessMsg>
+        <SuccessMsg
+          msg={Message}
+          state={showSuccess}
+          handleClose={handleClose}
+        ></SuccessMsg>
+
+        <ErrorMsg
+          msg={Message}
+          state={showError}
+          handleClose={handleClose}
+        ></ErrorMsg>
         <Typography className={classes.textHead} variant="h4" component="h4">
           Add Institution
         </Typography>
@@ -115,8 +145,7 @@ setShowSuccess({ open: true, ...newState });
               Institution name
             </Typography>
             <TextField
-            
-              onChange={e=>setInstitutionName(e.target.value)}
+              onChange={(e) => setInstitutionName(e.target.value)}
               className={classes.textInput}
               id="outlined-basic"
               label="Enter name of institution"
@@ -131,7 +160,6 @@ setShowSuccess({ open: true, ...newState });
             </Typography>
 
             <TextField
-            
               defaultValue={institutionType}
               className={classes.textInput}
               id="outlined-basic"
@@ -176,7 +204,7 @@ setShowSuccess({ open: true, ...newState });
               Short Price
             </Typography>
             <TextField
-             onChange={e=>setUniformShortPrice(e.target.value)}
+              onChange={(e) => setUniformShortPrice(e.target.value)}
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -190,7 +218,7 @@ setShowSuccess({ open: true, ...newState });
               Shirt Price
             </Typography>
             <TextField
-            onChange={e=>setUniformShirtPrice(e.target.value)}
+              onChange={(e) => setUniformShirtPrice(e.target.value)}
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -205,7 +233,7 @@ setShowSuccess({ open: true, ...newState });
               Sweater Price
             </Typography>
             <TextField
-            onChange={e=>setUniformSweaterPrice(e.target.value)}
+              onChange={(e) => setUniformSweaterPrice(e.target.value)}
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -219,7 +247,7 @@ setShowSuccess({ open: true, ...newState });
               Tie Price
             </Typography>
             <TextField
-             onChange={e=>setUniformTiePrice(e.target.value)}
+              onChange={(e) => setUniformTiePrice(e.target.value)}
               className={classes.textInput}
               id="outlined-basic"
               label="Enter price in digits eg. 300"
@@ -236,8 +264,8 @@ setShowSuccess({ open: true, ...newState });
               Short Price
             </Typography>
             <TextField
-            onChange={e=>setPEShortPrice(e.target.value)}
-            required
+              onChange={(e) => setPEShortPrice(e.target.value)}
+              required
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -251,7 +279,7 @@ setShowSuccess({ open: true, ...newState });
               Skirt Price
             </Typography>
             <TextField
-            onChange={e=>setPESkirtPrice(e.target.value)}
+              onChange={(e) => setPESkirtPrice(e.target.value)}
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -266,7 +294,7 @@ setShowSuccess({ open: true, ...newState });
               T-shirt Price
             </Typography>
             <TextField
-            onChange={e=>setPEtShirtPrice(e.target.value)}
+              onChange={(e) => setPEtShirtPrice(e.target.value)}
               type="number"
               className={classes.textInput}
               id="outlined-basic"
@@ -279,8 +307,9 @@ setShowSuccess({ open: true, ...newState });
         <Grid item xs={12} sm={6}>
           <Typography className={classes.textInputLabel}></Typography>
           <Button
-            onClick={()=>addInstitution({ vertical: "top", horizontal: "center" })}
-
+            onClick={() =>
+              addInstitution({ vertical: "top", horizontal: "center" })
+            }
             className={classes.submitBtn}
             variant="contained"
             color="primary"

@@ -1,3 +1,4 @@
+let md5 = require('js-md5');
 let date=new Date()
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -23,12 +24,14 @@ if(minutes <=9){
     minutes =`0${minutes}`
 }
 
-let fullDate= todaydate + "-" + month + "-"+ year +" "+  hours + ":" + minutes + ":" + seconds
-let orderId= todaydate +""+ numericMonth +""+ hours + "" + minutes + "" + seconds
+let fullDate1= todaydate + "-" + month + "-"+ year +" "+  hours + ":" + minutes + ":" + seconds
+let fullDate= todaydate + "-" + month + "-"+ year
 
+var orderId = (Date.now() + Math.random()).toString(36).toUpperCase()
 //console.log(orderId)
 
 export default {
     fullDate,
-    orderId
+    orderId,
+    fullDate1
 }

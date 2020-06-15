@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -12,10 +12,17 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import {
+  LinearProgress,
+  Typography,
+  Button,
+  Container,
+  Grid,
+} from "@material-ui/core";
+import { NavLink } from "react-router-dom";
+import AppButtonGroups from "../../components/AppButtonGroups";
 
-const axios=require('axios')
-
-
+const axios = require("axios");
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -45,23 +52,41 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "name",
+    id: "",
     numeric: false,
     disablePadding: true,
     label: "Institution Name",
   },
-  { id: "shortUniform", numeric: true, disablePadding: false, label: "Uniform Price (Short)" },
+  {
+    id: "uniformPrices.short",
+    numeric: true,
+    disablePadding: false,
+    label: "Uniform Price (Short)",
+  },
 
-  { id: "shirtUniform", numeric: true, disablePadding: false, label: "Uniform Price (Shirt)" },
+  {
+    id: "uniformPrices.short",
+    numeric: true,
+    disablePadding: false,
+    label: "Uniform Price (Shirt)",
+  },
 
-  { id: "sweaterUniform", numeric: true, disablePadding: false, label: "Uniform Price (Sweater)" },
-  { id: "tieUniform", numeric: true, disablePadding: false, label: "Uniform Price (Tie)" },
+  {
+    id: "uniformPrices.sweater",
+    numeric: true,
+    disablePadding: false,
+    label: "Uniform Price (Sweater)",
+  },
+  {
+    id: "uniformPrices.tie",
+    numeric: true,
+    disablePadding: false,
+    label: "Uniform Price (Tie)",
+  },
 
-
-  { id: "date", numeric: true, disablePadding: false, label: "Date added" },
   { id: "orders", numeric: true, disablePadding: false, label: "Orders" },
 
-  
+  { id: "actions", numeric: true, disablePadding: false, label: "Action" },
 ];
 
 function EnhancedTableHead(props) {
@@ -146,26 +171,26 @@ function AllInstitutions() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
-const [allInstitutions,setInstitutions]=useState([]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [allInstitutions, setInstitutions] = useState([]);
 
-  const getInstitutions=()=>{
+  const getInstitutions = () => {
     axios({
-      method:'GET',
-      url:'institutions'
-    }).then((res)=>{
-      console.log(res);
-      setInstitutions(res.data[0].rows)
-
-    }).catch((err)=>{
-      console.log(err);
-
+      method: "GET",
+      url: "institutions",
     })
-  }
+      .then((res) => {
+        console.log(res);
+        setInstitutions(res.data[0].rows);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  useEffect(()=>{
-getInstitutions();
-  },[])
+  useEffect(() => {
+    getInstitutions();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -189,90 +214,127 @@ getInstitutions();
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, allInstitutions.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, allInstitutions.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={allInstitutions.length}
-            />
-                  {
-           allInstitutions.length !== 0 || allInstitutions !== 'undefined'?
-            <TableBody>
-              {stableSort(allInstitutions, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((institution, index) => {
-                  const isItemSelected = isSelected(institution.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-return (
-  
- 
-           <TableRow
-           hover
-           aria-checked={isItemSelected}
-           tabIndex={-1}
-           key={institution.name}
-           selected={isItemSelected}
-         >
-           <TableCell padding="checkbox"></TableCell>
+      <Container>
+        <Typography id="textHead" variant="h4" component="h4">
+          All Institution
+        </Typography>
+        <div id="toolsDiv">
+          <Grid container spacing={4}>
+            <Grid item xs={12} sm={3}>
+              <Typography>
+                Institutions{" "}
+                <span style={{ fontSize: 25 }}>{allInstitutions.length}</span>
+              </Typography>
+            </Grid>
 
-           <TableCell
-             component="th"
-             id={labelId}
-             scope="row"
-             padding="none"
-           >
-             {institution.name}
-           </TableCell>
-           <TableCell align="right">{institution.uniformPrices.short}</TableCell>
-           <TableCell align="right">{institution.uniformPrices.skirt}</TableCell>
-           <TableCell align="right">{institution.uniformPrices.sweater}</TableCell>
-           <TableCell align="right">{institution.uniformPrices.tie}</TableCell>
+            <Grid item xs={12} sm={3}></Grid>
+            <Grid item xs={12} sm={3}></Grid>
+            <Grid style={{ textAlign: "right" }} item xs={12} sm={3}>
+              <NavLink to="/addInstitution">
+                <Button variant="contained" color="primary">
+                  Add Institution
+                </Button>
+              </NavLink>
+            </Grid>
+          </Grid>
+        </div>
+        <Paper className={classes.paper}>
+          <TableContainer id="tableContainer">
+            {allInstitutions.length === 0 || allInstitutions === "undefined" ? (
+              <LinearProgress color="secondary" />
+            ) : null}
+            <Table
+              stickyHeader
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={allInstitutions.length}
+              />
+              {allInstitutions.length !== 0 ||
+              allInstitutions !== "undefined" ? (
+                <TableBody>
+                  {stableSort(allInstitutions, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((institution, index) => {
+                      const isItemSelected = isSelected(institution.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+                      return (
+                        <TableRow
+                          hover
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={institution.name}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox"></TableCell>
 
-           <TableCell align="right">{institution.dateAdded}</TableCell>
-           <TableCell align="right">{institution.type}</TableCell>
-
-         </TableRow>
-   
-)
-                 
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            {institution.name}
+                          </TableCell>
+                          <TableCell align="right">
+                            {institution.uniformPrices.short}
+                          </TableCell>
+                          <TableCell align="right">
+                            {institution.uniformPrices.skirt}
+                          </TableCell>
+                          <TableCell align="right">
+                            {institution.uniformPrices.sweater}
+                          </TableCell>
+                          <TableCell align="right">
+                            {institution.uniformPrices.tie}
+                          </TableCell>
+                          <TableCell align="right">
+                            {institution.type}
+                          </TableCell>
+                          <TableCell align="right">
+                            <AppButtonGroups></AppButtonGroups>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              ) : (
+                <p>Please wait...</p>
               )}
-            </TableBody>
-            :<p>Please wait...</p>
-        }
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={allInstitutions.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={allInstitutions.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      </Container>
     </div>
   );
 }

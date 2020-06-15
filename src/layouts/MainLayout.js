@@ -87,6 +87,10 @@ export default function Default() {
         <Route path="/institutions">
             <AllInstitutions />
           </Route>
+
+          <Route path="/addInstitution">
+            <AddInstitution />
+          </Route>
         </Switch>
           {/* {
             uniforms.length != 0 || uniforms != 'undefined'?

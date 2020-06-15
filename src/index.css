@@ -29,3 +29,22 @@ code {
   background-color: #22222227;
   border-radius: 0px;
 }
+
+#textHead {
+  text-align: "left";
+  margin-bottom: 40px;
+  
+}
+
+
+#toolsDiv{
+  margin-bottom: 20px;
+
+}
+
+a{
+  text-decoration: none;
+}
+#tableContainer{
+  max-height: 40px,
+}

@@ -10,6 +10,13 @@ import SuccessMsg from "../components/SuccessMsg";
 import ErrorMsg from "../components/ErrorMsg";
 import EnhancedTable from "../components/AppTable";
 import AddInstitution from "../views/Institutions/AddInstitution";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import AllInstitutions from "../views/Institutions/AllInstitutions";
 const axios=require('axios')
 
 export default function Default() {
@@ -60,14 +67,14 @@ export default function Default() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppNav handleDrawerOpen={handleDrawerOpen} open={open}></AppNav>
+      <Router>
       <Sidenav
         handleDrawerClose={handleDrawerClose}
         handleDrawerOpen={handleDrawerOpen}
         open={open}
         setOpen={setOpen}
       ></Sidenav>
-
+      <AppNav handleDrawerOpen={handleDrawerOpen} open={open}></AppNav>
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
@@ -75,18 +82,12 @@ export default function Default() {
       >
         <div className={classes.drawerHeader} />
         <Typography paragraph>
-          {/* <Button
-            onClick={handleClick({ vertical: "top", horizontal: "center" })}
-          >
-            Top-Center
-          </Button> */}
-          {/* <SuccessMsg state={state} handleClose={handleClose} handleClick={handleClick}/> */}
-          <ErrorMsg
-            state={state}
-            handleClose={handleClose}
-            handleClick={handleClick}
-          ></ErrorMsg>
-          <AddInstitution></AddInstitution>
+
+        <Switch>
+        <Route path="/institutions">
+            <AllInstitutions />
+          </Route>
+        </Switch>
           {/* {
             uniforms.length != 0 || uniforms != 'undefined'?
             uniforms.map((uniform)=>{
@@ -99,8 +100,11 @@ export default function Default() {
           } */}
          
         </Typography>
-        {/* <EnhancedTable></EnhancedTable> */}
       </main>
+      </Router>
+   
+
+     
     </div>
   );
 }

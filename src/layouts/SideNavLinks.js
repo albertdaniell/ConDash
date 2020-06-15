@@ -8,28 +8,45 @@ import MailIcon from "@material-ui/icons/Mail";
 import { useStyles } from "../constants";
 import { Divider } from "@material-ui/core";
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,NavLink
+} from "react-router-dom";
+
 function SideNavLinks() {
   return (
-    <div >
+    <div class="linksDiv">
       <List>
+      <NavLink exact activeClassName="active" to="/">
+
         <ListItem button key="1">
           <ListItemIcon>
             <DashboardOutlined />
           </ListItemIcon>
-          <ListItemText primary="Dashboard" />
+          <Link to="/"><ListItemText primary="Dashboard" /></Link>
         </ListItem>
+        </NavLink>
+        <NavLink exact activeClassName="active" to="/clothes">
+
         <ListItem button key="2">
           <ListItemIcon>
             <MailIcon />
           </ListItemIcon>
-          <ListItemText primary="Clothes" />
+          <Link to="/clothes"><ListItemText primary="Clothes" /></Link>
         </ListItem>
+        </NavLink>
+        <NavLink exact activeClassName="active" to="/institutions">
         <ListItem button key="3">
+        
           <ListItemIcon>
             <LocationCityOutlined></LocationCityOutlined>
           </ListItemIcon>
-          <ListItemText primary="Institutions" />
+         <ListItemText primary="Institutions" />
+         
         </ListItem>
+        </NavLink>
         <ListItem button key="4">
           <ListItemIcon>
            <ShoppingCartOutlined></ShoppingCartOutlined>

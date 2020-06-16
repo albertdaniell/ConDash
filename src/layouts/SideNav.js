@@ -18,6 +18,7 @@ export default function Sidenav(props) {
   return (
     <div>
       <Drawer
+        color="inherit"
         className={classes.drawer}
         variant="persistent"
         anchor="left"

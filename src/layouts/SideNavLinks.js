@@ -17,7 +17,7 @@ import {
 
 function SideNavLinks() {
   return (
-    <div class="linksDiv">
+    <div  class="linksDiv">
       <List>
       <NavLink exact activeClassName="active" to="/">
 

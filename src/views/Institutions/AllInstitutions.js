@@ -12,12 +12,15 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import {
   LinearProgress,
   Typography,
   Button,
   Container,
   Grid,
+  TextField,
 } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import AppButtonGroups from "../../components/AppButtonGroups";
@@ -173,20 +176,50 @@ function AllInstitutions() {
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [allInstitutions, setInstitutions] = useState([]);
+  const [selectedId,setSelectedId]=useState('');
 
   const getInstitutions = () => {
     axios({
       method: "GET",
       url: "institutions",
+      params:{deletedStatus:false},
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     })
       .then((res) => {
         console.log(res);
-        setInstitutions(res.data[0].rows);
+      setInstitutions(  res.data[0].rows.filter((row)=>{
+
+        return row.deletedStatus === false
+      }))
+     //   setInstitutions(res.data[0].rows);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+
+  const deleteInstitution=(id)=>{
+    console.log("Wanting to delete id ", id)
+    axios({
+      method:'PUT',
+      url:`institutions/update/${id}`,
+      data:{deletedStatus:true},
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then((res)=>{
+      console.log(res)
+      if(res.data.status === 200){
+        getInstitutions();
+
+      }
+    })
+  }
 
   useEffect(() => {
     getInstitutions();
@@ -211,6 +244,14 @@ function AllInstitutions() {
     setDense(event.target.checked);
   };
 
+  const options = allInstitutions.map((option) => {
+    const firstLetter = option.name[0].toUpperCase();
+    return {
+      firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
+      ...option,
+    };
+  });
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -232,12 +273,24 @@ function AllInstitutions() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={3}></Grid>
+            <Grid item xs={12} sm={3}>
+              <Autocomplete
+                id="combo-box-demo"
+                options={options.sort(
+                  (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
+                )}
+                getOptionLabel={(option) => option.name}
+                style={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Search" variant="standard" />
+                )}
+              />
+            </Grid>
             <Grid item xs={12} sm={3}></Grid>
             <Grid style={{ textAlign: "right" }} item xs={12} sm={3}>
               <NavLink to="/addInstitution">
                 <Button variant="contained" color="primary">
-                  Add Institution
+                  Add Institution 
                 </Button>
               </NavLink>
             </Grid>
@@ -304,7 +357,7 @@ function AllInstitutions() {
                             {institution.type}
                           </TableCell>
                           <TableCell align="right">
-                            <AppButtonGroups></AppButtonGroups>
+                            <AppButtonGroups id={institution._id} setSelectedId={setSelectedId} selectedId={selectedId} deleteInstitution={deleteInstitution}></AppButtonGroups>
                           </TableCell>
                         </TableRow>
                       );

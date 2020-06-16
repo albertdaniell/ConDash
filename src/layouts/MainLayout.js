@@ -48,7 +48,8 @@ export default function Default() {
   const getUniforms=()=>{
     axios({
       method:'GET',
-      url:'institutions'
+      url:'institutions',
+      
     }).then((res)=>{
       console.log(res);
       setUniforms(res.data[0].rows)

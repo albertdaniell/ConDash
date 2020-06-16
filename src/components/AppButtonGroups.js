@@ -7,13 +7,13 @@ function AppButtonGroups(props) {
   return (
     <div>
       <ButtonGroup size="small" aria-label="small outlined button group">
-        <Button size="small" variant="outlined" color="primary"><Visibility fontSize="small"/></Button>
-        <Button size="small" variant="contained" color="primary"><Edit fontSize="small"/></Button>
+        <Button id="myBtn" size="small" variant="outlined" color="primary"><Visibility fontSize="small"/></Button>
+        <Button id="myBtn" size="small" variant="contained" color="primary"><Edit fontSize="small"/></Button>
         {
           selectedId === id?
-          <Button onClick={()=>deleteInstitution(id)} size="small" variant="contained" color="secondary"><Delete fontSize="small"/> Delete</Button>
+          <Button id="myBtn" onClick={()=>deleteInstitution(id)} size="small" variant="contained" color="secondary"><Delete fontSize="small"/> Delete</Button>
           :
-          <Button onClick={()=>setSelectedId(id)} size="small" variant="outlined" color="secondary"><Delete fontSize="small"/></Button>
+          <Button id="myBtn" onClick={()=>setSelectedId(id)} size="small" variant="outlined" color="secondary"><Delete fontSize="small"/></Button>
 
 
         }

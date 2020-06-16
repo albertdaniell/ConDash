@@ -24,6 +24,7 @@ import {
 } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import AppButtonGroups from "../../components/AppButtonGroups";
+import appDate from "../../constants/appDate";
 
 const axios = require("axios");
 
@@ -87,7 +88,7 @@ const headCells = [
     label: "Uniform Price (Tie)",
   },
 
-  { id: "orders", numeric: true, disablePadding: false, label: "Orders" },
+  { id: "orders", numeric: true, disablePadding: false, label: "Todays Orders" },
 
   { id: "actions", numeric: true, disablePadding: false, label: "Action" },
 ];
@@ -173,9 +174,10 @@ function AllInstitutions() {
   const [orderBy, setOrderBy] = React.useState("");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(true);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [allInstitutions, setInstitutions] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [selectedId,setSelectedId]=useState('');
 
   const getInstitutions = () => {
@@ -189,7 +191,7 @@ function AllInstitutions() {
       },
     })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
       setInstitutions(  res.data[0].rows.filter((row)=>{
 
         return row.deletedStatus === false
@@ -200,6 +202,26 @@ function AllInstitutions() {
         console.log(err);
       });
   };
+
+  const getOrders=(id)=>{
+   axios({
+     method:'GET',
+     url:'carts',
+
+   }).then((res)=>{
+    console.log(res);
+     setOrders(res.data[0].rows)
+
+   })
+
+  }
+
+  const getOrdersForInstitution=(id)=>{
+    console.log(id)
+    return orders.filter((order)=>{
+      return order.Userid === id && order.dateAdded === appDate.fullDate
+    }).length
+  }
 
 
   const deleteInstitution=(id)=>{
@@ -223,6 +245,7 @@ function AllInstitutions() {
 
   useEffect(() => {
     getInstitutions();
+    getOrders()
   }, []);
 
   const handleRequestSort = (event, property) => {
@@ -316,7 +339,7 @@ function AllInstitutions() {
                 rowCount={allInstitutions.length}
               />
               {allInstitutions.length !== 0 ||
-              allInstitutions !== "undefined" ? (
+              allInstitutions !== "undefined"  || orders.length !== 0 || orders !== 'undefined'? (
                 <TableBody>
                   {stableSort(allInstitutions, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -354,7 +377,13 @@ function AllInstitutions() {
                             {institution.uniformPrices.tie}
                           </TableCell>
                           <TableCell align="right">
-                            {institution.type}
+                            {
+                              getOrdersForInstitution(institution._id) >=1 ?
+                              <span id="myBadge">{getOrdersForInstitution(institution._id)}</span>
+:                           <span id="myBadge2">{getOrdersForInstitution(institution._id)}</span>
+
+                            }
+                            
                           </TableCell>
                           <TableCell align="right">
                             <AppButtonGroups id={institution._id} setSelectedId={setSelectedId} selectedId={selectedId} deleteInstitution={deleteInstitution}></AppButtonGroups>

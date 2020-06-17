@@ -14,6 +14,7 @@ import Axios from "axios";
 import SuccessMsg from "../../components/SuccessMsg";
 import appDate from "../../constants/appDate";
 import ErrorMsg from "../../components/ErrorMsg";
+import CONSTANTVAR from '../../constants/constVariables'
 
 function AddInstitution() {
   const [institutionName, setInstitutionName] = useState("");
@@ -87,7 +88,7 @@ function AddInstitution() {
 
   const addInstitution = (newState) => {
     Axios({
-      url: "institutions",
+      url: `${CONSTANTVAR.APIURL}institutions`,
       data: formData,
       method: "POST",
       headers: {

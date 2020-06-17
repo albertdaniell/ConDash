@@ -180,41 +180,31 @@ function AllInstitutions() {
   const [orders, setOrders] = useState([]);
   const [selectedId,setSelectedId]=useState('');
 
-  const getInstitutions = () => {
-    axios({
-      method: "GET",
-      url: `${CONSTANTVAR.APIURL}institutions`,
-      body:{deletedStatus:false},
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: 'no-cors' 
-    })
-      .then((res) => {
-        //console.log(res);
-      setInstitutions(  res.data[0].rows.filter((row)=>{
+  const getInstitutions = async() => {
+    const fetchedData=await fetch(`${CONSTANTVAR.APIURL}institutions`,{ headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },mode:'no-cors'})
+    //const fetchedJson=await fetchedData.json();
+    console.log(fetchedData);
 
-        return row.deletedStatus === false
-      }))
+    
+     
+      // setInstitutions(  res.data[0].rows.filter((row)=>{
+
+      //   return row.deletedStatus === false
+      // }))
      //   setInstitutions(res.data[0].rows);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+     
   };
 
   const getOrders=(id)=>{
-   axios({
-     method:'GET',
-     url: `${CONSTANTVAR.APIURL}carts`,
-     mode: 'no-cors' 
+  //   fetch(`${CONSTANTVAR.APIURL}carts`,{mode: 'no-cors'})
+  //   .then((res)=>{
+  //   //console.log(res);
+  //    //setOrders(res.data[0].rows)
 
-   }).then((res)=>{
-    console.log(res);
-     setOrders(res.data[0].rows)
-
-   })
+  //  })
 
   }
 

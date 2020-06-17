@@ -51,7 +51,7 @@ export default function Default() {
       url:'institutions',
       
     }).then((res)=>{
-      console.log(res);
+     // console.log(res);
       setUniforms(res.data[0].rows)
 
     }).catch((err)=>{

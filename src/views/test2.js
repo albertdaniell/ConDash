@@ -179,42 +179,43 @@ function AllInstitutions() {
   const [allInstitutions, setInstitutions] = useState([]);
   const [orders, setOrders] = useState([]);
   const [selectedId,setSelectedId]=useState('');
-
-  const getInstitutions = () => {
-    axios({
-      method: "GET",
-      url: `${CONSTANTVAR.APIURL}institutions`,
-      body:{deletedStatus:false},
+  const url =`${CONSTANTVAR.APIURL}institutions`;
+  
+  const getInstitutions = async()=>{
+    const response =await fetch (url,{
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'no-cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin':'*' ,
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      mode: 'no-cors' 
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     })
-      .then((res) => {
+    console.log( "resp", response)
         //console.log(res);
-      setInstitutions(  res.data[0].rows.filter((row)=>{
+      // setInstitutions(await response.data[0].rows.filter((row)=>{
 
-        return row.deletedStatus === false
-      }))
+      //   return row.deletedStatus === false
+      // }))
      //   setInstitutions(res.data[0].rows);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+     
   };
 
   const getOrders=(id)=>{
-   axios({
-     method:'GET',
-     url: `${CONSTANTVAR.APIURL}carts`,
-     mode: 'no-cors' 
+  //  axios({
+  //    method:'GET',
+  //    url: `${CONSTANTVAR.APIURL}carts`,
+  //    mode: 'no-cors' 
 
-   }).then((res)=>{
-    console.log(res);
-     setOrders(res.data[0].rows)
+  //  }).then((res)=>{
+  //   console.log(res);
+  //    setOrders(res.data[0].rows)
 
-   })
+  //  })
 
   }
 

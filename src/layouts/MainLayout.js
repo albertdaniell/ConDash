@@ -17,6 +17,7 @@ import {
   Link
 } from "react-router-dom";
 import AllInstitutions from "../views/Institutions/AllInstitutions";
+import ViewInstitution from "../views/Institutions/ViewInstitution";
 const axios=require('axios')
 
 export default function Default() {
@@ -91,6 +92,10 @@ export default function Default() {
 
           <Route path="/addInstitution">
             <AddInstitution />
+          </Route>
+
+          <Route path="/institution/q">
+            <ViewInstitution />
           </Route>
         </Switch>
           {/* {

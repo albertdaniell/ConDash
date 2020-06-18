@@ -25,6 +25,7 @@ import { NavLink } from "react-router-dom";
 import AppButtonGroups from "../../components/AppButtonGroups";
 import appDate from "../../constants/appDate";
 import CONSTANTVAR from '../../constants/constVariables'
+import { Add } from "@material-ui/icons";
 
 const axios = require("axios");
 
@@ -89,6 +90,8 @@ const headCells = [
   },
 
   { id: "orders", numeric: true, disablePadding: false, label: "Todays Orders" },
+  { id: "deleted", numeric: true, disablePadding: false, label: "" },
+
 
   { id: "actions", numeric: true, disablePadding: false, label: "Action" },
 ];
@@ -170,6 +173,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function AllInstitutions() {
   const classes = useStyles();
+  const [allInstitutionsData,setAllInstitutionsData]=useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("");
   const [selected, setSelected] = React.useState([]);
@@ -197,12 +201,18 @@ function AllInstitutions() {
 
         return row.deletedStatus === false
       }))
+
+      setAllInstitutionsData(res.data[0].rows)
      //   setInstitutions(res.data[0].rows);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const ViewAllInstitutions=()=>{
+    setInstitutions(allInstitutionsData)
+  }
 
   const getOrders=(id)=>{
    axios({
@@ -292,14 +302,14 @@ function AllInstitutions() {
         </Typography>
         <div id="toolsDiv">
           <Grid container spacing={4}>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={2}>
               <Typography>
                 Institutions{" "}
                 <span style={{ fontSize: 25 }}>{allInstitutions.length}</span>
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 id="combo-box-demo"
                 options={options.sort(
@@ -312,11 +322,20 @@ function AllInstitutions() {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}></Grid>
-            <Grid style={{ textAlign: "right" }} item xs={12} sm={3}>
+            <Grid style={{ textAlign: "right" }} item xs={12} sm={2}>
+            <Button variant="contained" color="primary">
+                 <Add></Add> Search
+                </Button>
+            </Grid>
+            <Grid style={{ textAlign: "right" }} item xs={12} sm={2}>
+            <Button onClick={()=>ViewAllInstitutions()} variant="outlined" color="primary">
+                 <Add></Add> View All 
+                </Button>
+            </Grid>
+            <Grid style={{ textAlign: "right" }} item xs={12} sm={2}>
               <NavLink to="/addInstitution">
-                <Button variant="contained" color="primary">
-                  Add Institution 
+                <Button variant="contained" color="secondary">
+                 <Add></Add> Add 
                 </Button>
               </NavLink>
             </Grid>
@@ -389,7 +408,10 @@ function AllInstitutions() {
                             
                           </TableCell>
                           <TableCell align="right">
-                            <AppButtonGroups id={institution._id} setSelectedId={setSelectedId} selectedId={selectedId} deleteInstitution={deleteInstitution}></AppButtonGroups>
+                            {institution.deletedStatus === true? <span>Deleted</span> :<span>Active</span>}
+                          </TableCell>
+                          <TableCell align="right">
+                            <AppButtonGroups id={institution._id} setSelectedId={setSelectedId} selectedId={selectedId} deleteInstitution={deleteInstitution} deletedStatus={institution.deletedStatus}></AppButtonGroups>
                           </TableCell>
                         </TableRow>
                       );

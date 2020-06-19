@@ -75,9 +75,25 @@ a{
   margin-bottom: 20px;
   margin-top: 10px;
   text-align: center;
+  transition: .5s;
+}
+
+#imgPaper :hover{
+  z-index: 1000;
+  width: 90%;
+  left: 0;
+  top:0;
+  height: 90%;
+  position: absolute;
+}
+
+#imgPaper :hover img{
+  width: 200px;
+  height: 'auto';
 }
 
 #imgPaper img{
   width: 200px;
   height: 150px;
+  
 }

@@ -15,6 +15,9 @@ import SuccessMsg from "../../components/SuccessMsg";
 import appDate from "../../constants/appDate";
 import ErrorMsg from "../../components/ErrorMsg";
 import CONSTANTVAR from '../../constants/constVariables'
+import { imgSrcToBlob, createBlob, createObjectURL, blobToDataURL, blobToBinaryString, binaryStringToBlob, blobToBase64String, dataURLToBlob } from 'blob-util'
+const { v4: uuidv4 } = require("uuid");
+
 
 function AddInstitution() {
   const [institutionName, setInstitutionName] = useState("");
@@ -28,11 +31,19 @@ function AddInstitution() {
   const [pEShortPrice, setPEShortPrice] = useState("");
   const [pESkirtPrice, setPESkirtPrice] = useState("");
   const [pEtShirtPrice, setPEtShirtPrice] = useState("");
+  const [url1,setUrl1]=useState('')
+  const [url2,setUrl2]=useState('')
+  const [url3,setUrl3]=useState('')
+  const [url4,setUrl4]=useState('')
+
+
+
   const [showSuccess, setShowSuccess] = useState({
     open: false,
     vertical: "top",
     horizontal: "center",
   });
+  
 
   const [showError, setShowError] = useState({
     open: false,
@@ -48,12 +59,13 @@ function AddInstitution() {
   ];
 
   const formData = {
+    id: uuidv4(),
     name: institutionName,
     dateAdded: appDate.fullDate,
     type: institutionType,
     imageBlob: {
-      uniform: "18726626ahsyyafs-12",
-      peKit: "18726626ajshhsi1sks-23",
+      uniform: url1,
+      peKit: url2,
     },
     uniformPrices: {
       short: uniformShortPrice,
@@ -67,6 +79,103 @@ function AddInstitution() {
       tShirt: pEtShirtPrice,
     },
   };
+
+
+  const randomFn1=(e)=>{
+    const img=document.getElementById('myImg').src
+    let f=e.target.files[0];
+    if(/(jpe?g|png|gif)$/i.test(f.type)){
+      console.log(e.target.files[0]);
+      console.log(e.target.files[0])
+  
+    let string=binaryStringToBlob(e.target.files[0])
+    var myBlob = createBlob([e.target.files[0]], {type: e.target.files[0].type})
+  let reader = new FileReader();
+  let base64=reader.readAsDataURL(myBlob);
+    console.log("type",myBlob.type)
+  
+    blobToDataURL(myBlob).then(function (base64String) {
+    var blob =dataURLToBlob(base64String);
+    let objurl=createObjectURL(blob)
+    console.log(objurl)
+  
+   setUrl1(base64String)
+     
+    }).catch(function (err) {
+      // error
+    });
+    }
+    else{
+      setUrl1('');
+      alert("File format is incorrect, Kindly Choose an image")
+    }
+
+  }
+
+
+  const randomFn2=(e)=>{
+    const img=document.getElementById('myImg').src
+    let f=e.target.files[0];
+    if(/(jpe?g|png|gif)$/i.test(f.type)){
+      console.log(e.target.files[0]);
+      console.log(e.target.files[0])
+  
+    let string=binaryStringToBlob(e.target.files[0])
+    var myBlob = createBlob([e.target.files[0]], {type: e.target.files[0].type})
+  let reader = new FileReader();
+  let base64=reader.readAsDataURL(myBlob);
+    // console.log(myBlob)
+  
+    blobToDataURL(myBlob).then(function (base64String) {
+    var blob =dataURLToBlob(base64String);
+   
+    
+   setUrl2(base64String)
+   console.log("url2",url2)
+     
+    }).catch(function (err) {
+      // error
+    });
+    }
+    else{
+      setUrl2('');
+      alert("File format is incorrect, Kindly Choose an image")
+    }
+
+  }
+
+  let myconvertBlobToBase64=(blob)=>{
+    console.log(blob)
+    let base='';
+    
+    blobToDataURL(blob).then((base64String)=> {
+     base = base64String
+    //  console.log(base64String)
+     //return base64String;
+     setUrl3(base64String)
+       
+      })
+      console.log("base",base)
+
+      return base
+  }
+
+
+  let myconvertBlobToBase642=(blob)=>{
+    //console.log(blob)
+    let base='';
+    
+    blobToDataURL(blob).then((base64String)=> {
+     base = base64String
+    //  console.log(base64String)
+     //return base64String;
+     setUrl4(base64String)
+       
+      })
+      console.log("base",base)
+
+      return base
+  }
 
   const clearData=()=>{
   setTimeout(() => {
@@ -186,12 +295,30 @@ function AddInstitution() {
           <Grid item xs={12} sm={6}>
             <Typography className={classes.textInputLabel}>Uniform</Typography>
 
-            <div className={classes.imageDiv}></div>
+            <div className={classes.imageDiv}>
+
+
+  <img src={url1} id="myImg2" style={{height:'auto',width:350}}></img>
+
+
+            </div>
+            <input onChange={(e)=>randomFn1(e)} type="file" id="myImg"></input>
+
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <Typography className={classes.textInputLabel}>P.E Kit</Typography>
-            <div className={classes.imageDiv}></div>
+            <div className={classes.imageDiv}>
+
+
+
+
+  <img src={url2} id="myImg2" style={{height:'auto',width:350}}></img>
+
+
+            </div>
+            <input onChange={(e)=>randomFn2(e)} type="file" id="myImg"></input>
+
           </Grid>
         </Grid>
 

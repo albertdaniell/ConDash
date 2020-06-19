@@ -69,3 +69,15 @@ a{
 
 #myBtn{
 }
+
+#imgPaper{
+  padding:10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+#imgPaper img{
+  width: 200px;
+  height: 150px;
+}

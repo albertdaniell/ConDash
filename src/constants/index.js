@@ -82,8 +82,8 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
   imageDiv: {
-    width: 200,
-    height: 200,
+    width: 350,
+    height: 250,
     backgroundColor: "#F5F5F5",
     borderRadius: 10,
   },
